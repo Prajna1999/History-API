@@ -1,14 +1,37 @@
-console.log("Hello World");
+document.addEventListener("DOMContentLoaded", ()=>{
+
+  // Add a non existing filename to the location bar
+  // history.pushState("null", "Title", "pretend.html");
+  document.getElementById("link").addEventListener("click", c);
+  window.addEventListener("hashchange", hc);
+  window.addEventListener("popstate", ps);
 
 
-function show(output){
-  document.getElementById("output").innerHTML=`<p>${output}</p>`;
+});
+function c(ev){
+  showOutput("clicked")
+  ev.preventDefault(); //prevents from going to the page anchored by the a tag.
+  let href=ev.currentTarget.href;
+  showOutput(href);
+  history.pushState({"abc":123}, "title", href); //change the link in the address bar.
+
 }
-// show("Location: " + location.href);
+function hc(ev){
+  showOutput("hashchanged");
 
-// show(location.search)
-// history.go(-2);
-// history.back();
-// history.forward();
-// location.replace("www.google.com");
-show('history.state: '+history.state);
+}
+function ps(ev){
+  console.log(ev.state);
+  showOutput("popstateupdated");
+}
+
+function showOutput(output){
+  let p=document.createElement("p");
+  p.textContent=output;
+  document.getElementById("output").appendChild(p);
+
+  // remove the things from the UI
+  setTimeout(_=>{
+    document.getElementById("output").removeChild(p)
+  },4000);
+}
